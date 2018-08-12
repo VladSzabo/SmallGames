@@ -1,6 +1,5 @@
 from pygame import *
 from random import *
-
 s, c, im = display.set_mode((300, 300)), sample(range(100), 10), [image.load(str([9, i-10][i > 9])) for i in range(22)]
 m, h = [*map(lambda x:sum([i//10-1 <= x//10 <= i//10+1 and i % 10-1 <= x % 10 <= i % 10+1 for i in c]), range(200))], 30
 while True:
