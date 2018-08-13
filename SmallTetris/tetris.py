@@ -22,17 +22,29 @@ from json import *
     For now, we separate variables for clarity but we keep short names to check if it fits
 """
 
-s = loads(open("s").read())
-m = [[randint(0, 1) for _ in range(10)] for _ in range(20)]
+s = [[[i+[0]*20 for i in r]+[[0]*20]*20 for r in s] for s in loads(open("s").read())]
+m = [[randint(0, 0) for _ in range(10)] for _ in range(99)]
 g = display.set_mode((200, 400))
-c, r = choice(s), 0
-x, y = 10, -1
+c, r = s[2], 0
+x, y, u = 3, 0, KEYUP
+
+print({0: 1 for a in range(3)}.get(0))
 
 while True:
-    m = [[[m, m, m][e.key - 274] for e in event.get() if e.type == KEYUP]+[m]][0][0]
+    # handle movement and rotation
+    x, r = [[{1: (x+1, r), 2: (x-1, r), 0: (x, r+1)}.get(e.key-274) for e in event.get() if e.type == u]+[(x, r)]][0][0]
+
+    # draw map
     [[draw.rect(g, [0, 255][m[i][j]], (j*20, i*20, 20, 20)) for j in range(10)] for i in range(20)]
-    display.update(), time.Clock().tick(10)
-    m = [[m[i], [0]*10][all(m[i])] for i in range(20)]  # delete full rows
+
+    # update screen
+    display.update(), time.Clock().tick(3)
+
+    # delete full rows
+    m = [[m[i], [0]*10][all(m[i])] for i in range(20)]
+
+    # shape moves down constantly
+    m, y = [[[m[i][j] > 0, -1][c[r % len(s)][i-y][j-x]] for j in range(10)] for i in range(20)], [y+1, y][y > 16]
 
 """
 Steps:
@@ -46,12 +58,4 @@ Steps:
     -------
     Ideas:
         - left, middle and right arrow for movement (or keys with consecutive ASCII codes)
-
-m = [[[m1, m2, m3][e.key - 274] for e in event.get() if e.type == KEYUP]+[m]][0][0]
-
-Explanation:
-    - if you press nothing, m = m
-    - if you press ARROW_DOWN, m = m1
-    - if you press ARROW_RIGHT, m = m2
-    - if you press ARROW_LEFT, m = m3
 """
