@@ -23,14 +23,13 @@ from json import *
 """
 
 s = [[[i+[0]*20 for i in r]+[[0]*20]*20 for r in s] for s in loads(open("s").read())]
-m = [[randint(0, 0) for _ in range(10)] for _ in range(99)]
+m = [[randint(0, 1) for _ in range(10)] for _ in range(20)]
 m[randint(0, 19)] = [1]*10
 m[randint(0, 19)] = [1]*10
 g = display.set_mode((200, 400))
 c, r = s[2], 0
 x, y, u = 3, 0, KEYUP
-
-print({0: 1 for a in range(3)}.get(0))
+b = (lambda q: ~all(q)+2,)
 
 while True:
     # handle movement and rotation
@@ -40,18 +39,13 @@ while True:
     [[draw.rect(g, [0, 255][m[i][j]], (j*20, i*20, 20, 20)) for j in range(10)] for i in range(20)]
 
     # update screen
-    display.update(), time.Clock().tick(3)
-
-    # delete full rows
-    m = [[m[i], [0]*10][all(m[i])] for i in range(20)]
+    display.update(), time.Clock().tick(1)
 
     # shape moves down constantly
-    m, y = [[[m[i][j] > 0, -1][c[r % len(s)][i-y][j-x]] for j in range(10)] for i in range(20)], [y+1, y][y > 16]
+    m, y = [[[m[i][j] > 0, -1][c[r % len(s)][i-int(y)][j-x]] for j in range(10)] for i in range(20)], [y+.1, y][y > 16]
 
-    # sleep(1)
-    # m = [[m[i], [0]*10][all(m[i])] for i in range(20)]  # delete full rows # probably not needed anymore
-    m = (20 - len(list(filter(lambda q: q != [1] * 10, m)))) * [[0] * 10] + list(filter(lambda q: q != [1] * 10, m))
-    m = (20 - len([*filter(lambda q: ~all(q), m)])) * [[0] * 10] + [*filter(lambda q: ~all(q), m)]
+    # move map down when full lines are present
+    m = (20-len([*filter(b[0], m)]))*[[0]*10]+[*filter(b[0], m)]
 
 """
 Steps:
