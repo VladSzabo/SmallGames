@@ -1,6 +1,7 @@
 from pygame import *
 from random import *
 from json import *
+from time import sleep
 
 """
     s -> shapes
@@ -24,6 +25,8 @@ from json import *
 
 s = loads(open("s").read())
 m = [[randint(0, 1) for _ in range(10)] for _ in range(20)]
+m[randint(0, 19)] = [1]*10
+m[randint(0, 19)] = [1]*10
 g = display.set_mode((200, 400))
 c, r = choice(s), 0
 x, y = 10, -1
@@ -32,7 +35,10 @@ while True:
     m = [[[m, m, m][e.key - 274] for e in event.get() if e.type == KEYUP]+[m]][0][0]
     [[draw.rect(g, [0, 255][m[i][j]], (j*20, i*20, 20, 20)) for j in range(10)] for i in range(20)]
     display.update(), time.Clock().tick(10)
-    m = [[m[i], [0]*10][all(m[i])] for i in range(20)]  # delete full rows
+    sleep(1)
+    # m = [[m[i], [0]*10][all(m[i])] for i in range(20)]  # delete full rows # probably not needed anymore
+    m = (20-len(list(filter(lambda q: q != [1]*10, m))))*[[0]*10]+list(filter(lambda q: q != [1]*10, m))
+    m = (20-len([*filter(lambda q:  ~all(q), m)]))*[[0]*10]+[*filter(lambda q: ~all(q), m)]
 
 """
 Steps:
