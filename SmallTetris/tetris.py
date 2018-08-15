@@ -24,14 +24,14 @@ from random import randint as f, choice as k
                               
     Have the base.
     Make a lambda that rotates it once and expands it by 20x20
+    
 """
-
-b = (lambda q: ~all(q)+2, lambda q: [[q[j][i] for j in range(3)][::-1]+q[i][3:] for i in range(3)]+q[3:])
-s = [[[*map(int, format(int(i), '03b'))]+[0]*20 for i in str(j)]+[[0]*20]*20 for j in [66, 222, 36, 63, 446, 226, 72]]
+b = (lambda q: ~all(q)+2, lambda q, z: [[q[j][i] for j in range(z)][::-1]+q[i][z:] for i in range(z)]+q[z:])
+s = [[[*map(int, bin(int(i))[:1:-1])]+[0]*20 for i in str(j)]+[[0]*20]*20 for j in [33, 2222, 630, 360, 113, 223, 720]]
 m, g, c, x, y = [[f(0, 0) for _ in range(10)] for i in range(20)], d.set_mode((200, 400)), k(s), 4, 0
 while True:
     # handle movement and rotation
-    x, c = [[{1: (x+1, c), 2: (x-1, c), 0: (x, b[1](c))}.get(e.key-274) for e in v.get() if e.type == K]+[(x, c)]][0][0]
+    x, c = {0: [(x+1, c), (x-1, c), (x, b[1](c, len(c)-20))][e.key-275] for e in v.get() if e.type == K}.get(0)or(x, c)
 
     # draw map
     [[p.rect(g, [0, 255][m[i][j]], (j*20, i*20, 20, 20)) for j in range(10)] for i in range(20)]
